@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Evenement;
+use App\Models\Association;
 use App\Models\Reservation;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -18,11 +21,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+   
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,8 +40,17 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function reservations()
+    public function association()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->belongsTo(Association::class);
     }
+
+    public function evenements()
+    {
+        return $this->hasMany(Evenement::class, 'user_id');
+    }
+    public function reservations()
+{
+    return $this->hasMany(Reservation::class, 'user_id');
+}
 }

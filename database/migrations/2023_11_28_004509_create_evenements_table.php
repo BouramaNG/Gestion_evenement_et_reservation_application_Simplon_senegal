@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('evenements', function (Blueprint $table) {
             
             $table->id();
-            $table->foreignId('association_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
             $table->string('libelle');
             $table->date('date_evenement');
             $table->string('lieux');
+            $table->string('photo')->nullable();
             $table->text('description');
             $table->enum('closed', ['ouvert', 'fermé'])->default('ouvert');
             $table->date('date_limite_inscription');

@@ -13,17 +13,15 @@ class Reservation extends Model
 
 
 
-    protected $fillable = [
-        'event_id', 'user_id', 'seats_reserved', 'status',
-    ];
+    protected $guarded =[];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
 
-    public function event()
+    public function evenement()
     {
-        return $this->belongsTo(Evenement::class);
+        return $this->belongsTo(Evenement::class,'evenement_id');
     }
 }

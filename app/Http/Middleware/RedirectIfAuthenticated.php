@@ -24,7 +24,13 @@ class RedirectIfAuthenticated
                 return redirect(RouteServiceProvider::HOME);
             }
         }
-
+        if ($guard == 'association' && Auth::guard($guard)->check()) {
+            return redirect('/dashboard/association'); 
+        }
+    
+        if (Auth::guard($guard)->check()) {
+            return redirect('/dashboard'); 
+        }
         return $next($request);
     }
 }

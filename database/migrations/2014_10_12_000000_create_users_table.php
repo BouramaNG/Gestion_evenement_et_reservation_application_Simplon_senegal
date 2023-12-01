@@ -19,7 +19,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('photo')->nullable();
+            
+            $table->string('slogan')->nullable();
+            $table->string('logo')->nullable();
             $table->string('phone')->nullable();
+            $table->string('date_inscription_association')->nullable();
             $table->string('address')->nullable();
             $table->enum('role',['admin','association','user'])->default('user');
             $table->enum('status',['active','inactive'])->default('active');

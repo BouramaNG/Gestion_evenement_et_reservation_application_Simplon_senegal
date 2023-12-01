@@ -12,9 +12,7 @@ class Association extends Model
     use HasFactory;
 
 
-    protected $fillable = [
-        'name', 'email', 'password', 'address', 'contact_phone', 'role',
-    ];
+    protected $guarded = [];
 
     protected $hidden = [
         'password', 'remember_token',

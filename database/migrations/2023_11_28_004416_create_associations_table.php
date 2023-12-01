@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('address');
             $table->string('phone');
+            $table->string('date_inscription_association')->nullable();
             $table->string('role')->default('association');
             $table->string('slogan')->nullable();
             $table->string('logo')->nullable();

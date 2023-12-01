@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Association;
 use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Model;
@@ -12,9 +13,7 @@ class Evenement extends Model
     use HasFactory;
 
 
-    protected $fillable = [
-        'association_id', 'name', 'date', 'location', 'description', 'registration_deadline', 'total_seats',
-    ];
+    protected $guarded = [];
 
     public function association()
     {
@@ -25,4 +24,9 @@ class Evenement extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
 }
