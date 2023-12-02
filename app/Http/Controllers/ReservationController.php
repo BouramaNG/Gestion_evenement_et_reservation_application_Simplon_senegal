@@ -54,13 +54,14 @@ class ReservationController extends Controller
 
     public function Historique()
     {
+       
         $user = Auth::user();
-
-        // Utiliser la relation pour récupérer les réservations de l'utilisateur
-        $reserves = $user->evenements->flatMap->reservations;
-        return view('frontend.historique',compact('reserves'));
+        $reserves = Evenement::join('reservations', 'evenements.id', '=', 'reservations.evenement_id')
+            ->where('reservations.user_id', $user->id)
+            ->get();
+    
+        return view('frontend.historique', compact('reserves', 'user'));
     }
-
 }
 
 
