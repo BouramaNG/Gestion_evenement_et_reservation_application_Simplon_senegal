@@ -29,4 +29,10 @@ class Evenement extends Model
 {
     return $this->belongsTo(User::class, 'user_id');
 }
+
+public function isCancelable()
+{
+   
+    return now()->diffInDays($this->date_evenement) > 3;
+}
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('lieux');
             $table->string('photo')->nullable();
             $table->text('description');
+            $table->string('qr_code_path')->nullable();
             $table->enum('closed', ['ouvert', 'fermé'])->default('ouvert');
             $table->date('date_limite_inscription');
             $table->integer('total_place');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Evenement;
 use App\Models\Reservation;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +39,7 @@ class ReservationController extends Controller
         $reservation = new Reservation();
         $reservation->evenement_id = $request->evenement_id;
         $reservation->user_id = $user->id;
-        $reservation->reference = $request->reference;
+        $reservation->reference = Str::uuid();
         $reservation->place_reserver = $request->nombre_places;
         $reservation->status = $request->status;
         $reservation->reservation_date = $request->reservation_date;
@@ -62,6 +63,35 @@ class ReservationController extends Controller
     
         return view('frontend.historique', compact('reserves', 'user'));
     }
+
+
+    public function cancelReservation($id)
+{
+   
+    $reservation = Reservation::find($id);
+
+    if (!$reservation) {
+        return redirect()->back()->with('error', 'Réservation non trouvée.');
+    }
+
+    $reservation->update(['canceled' => true]);
+
+    return redirect()->back()->with('success', 'Vous voulez annuler votre reservation thieuy yalla !attendez quelques minutes.');
+}
+
+public function supprimerReservation($id)
+{
+    $reservation = Reservation::find($id);
+
+    if (!$reservation) {
+        return redirect()->back()->with('error', 'Réservation non trouvée.');
+    }
+
+    $reservation->delete();
+
+    return redirect()->back()->with('success', 'Réservation supprimée avec succès.');
+}
+
 }
 
 

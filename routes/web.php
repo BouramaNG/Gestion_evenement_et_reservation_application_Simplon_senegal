@@ -60,4 +60,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 
 Route::get('historique',[ReservationController::class,'Historique'])->name('historique');
+Route::post('/cancel-reservation/{id}', [ReservationController::class,'cancelReservation'])->name('cancel_reservation');
+Route::delete('/supprimer-reservation/{id}', [ReservationController::class,'supprimerReservation'])->name('supprimer_reservation');
+
 require __DIR__.'/auth.php';

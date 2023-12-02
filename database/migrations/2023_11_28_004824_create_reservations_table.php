@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('status')->default('en_cours');
             $table->timestamp('reservation_date')->default(now()); 
             $table->boolean('est_accepted')->default(true);
+            $table->boolean('canceled')->default(false);
             $table->timestamps();
+           
         });
     }
 

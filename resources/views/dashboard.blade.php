@@ -551,7 +551,7 @@ h2::after {
             <a href="{{route('historique')}}" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Historique</span></a>		
             <a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
             <div class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> Antonio Moreno <b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> {{Auth::user()->name}} <b class="caret"></b></a>
                 <div class="dropdown-menu">
                     
                     <div class="divider dropdown-divider"></div>
@@ -630,7 +630,7 @@ h2::after {
 				<div class="item carousel-item active">
 					<div class="row">
           @foreach($event as $events)
-						<div class="col-sm-3">
+						<div class="col-md-4 mb-4">
 							<div class="thumb-wrapper">
 								<span class="wish-icon"><i class="fa fa-heart-o"></i></span>
 								<div class="img-box">

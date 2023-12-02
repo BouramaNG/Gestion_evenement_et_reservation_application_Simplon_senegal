@@ -222,12 +222,7 @@
 
 
 
-        .image img{
-            height: 500px;
-            width: 100%;
-            margin-top: 40px;
-          
-        }
+       
        .carousel-item img{
         height: 500px;
         margin-top: 20px;
@@ -417,14 +412,14 @@ h2::after {
 	box-shadow: 0 2px 3px rgba(0,0,0,0.2);
 }
 .carousel .item .img-box {
-	height: 120px;
+	height: 80px;
 	margin-bottom: 20px;
 	width: 100%;
 	position: relative;
 }
 .carousel .item img {	
 	max-width: 100%;
-	max-height: 100%;
+	max-height: 70%;
 	display: inline-block;
 	position: absolute;
 	bottom: 0;
@@ -509,6 +504,9 @@ h2::after {
 	border-radius: 50%;
 	border: none;
 }
+.image-boura img{
+    height: 120px;
+}
 .carousel-indicators li {	
 	background: rgba(0, 0, 0, 0.2);
 }
@@ -554,19 +552,14 @@ h2::after {
     </button>
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">		
-        <form class="navbar-form form-inline">
-            <div class="input-group search-box">								
-                <input type="text" id="search" class="form-control" placeholder="Search here...">
-                <span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
-            </div>
-        </form>
+       
         <div class="navbar-nav ml-auto">
-            <a href="{{route('dashboard')}}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Acceuil</span></a>
+            <a href="{{url('/')}}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Acceuil</span></a>
            
            
             <a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
             <div class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> Antonio Moreno <b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> {{Auth::user()->name}} <b class="caret"></b></a>
                 <div class="dropdown-menu">
                     
                     <div class="divider dropdown-divider"></div>
@@ -590,39 +583,68 @@ h2::after {
 
 <section class="carte">
 <div class="container-xl">
-	<div class="row">
-		<div class="col-md-12">
-			<h2>Bienvenue <b>{{Auth::user()->name}}</b> <b>Vos Historiques</b></h2>
-			<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="0">
-			 
-			<div class="carousel-inner">
-				<div class="item carousel-item active">
-					<div class="row">
-          @foreach($reserves as $reserve)
-						<div class="col-sm-3">
-							<div class="thumb-wrapper">
-								<span class="wish-icon"><i class="fa fa-heart-o"></i></span>
-								<div class="img-box">
-                <img src="{{ asset('public/image/' . $reserve->photo) }}" class="card-img-top overflow-hidden" alt="...">
-								</div>
-								<div class="thumb-content">
-                <h5 class="card-title">{{$reserve->libelle}}</h5>
-    <h5 class="card-title">Date: {{$reserve->date_evenement}}</h5>
-    <p class="card-text overflow-hidden" style="max-height: 10rem;">Description : {{$reserve->description}}</p>
-    <h5 class="card-title">Lieux: {{$reserve->lieux}}</h5>
-    <h5 class="card-title">Publie Par: {{ $reserve->user_id ? $reserve->user->name : 'Utilisateur inconnu' }}</h5>
-  <a href="{{route('details',['id'=>$reserve->id])}}" class="btn btn-primary">Voir Details</a>
-								</div>						
-							</div>
-						</div>
-            @endforeach
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Bienvenue <b>{{ Auth::user()->name }}</b> - Vos Historiques</h2>
+            <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="0">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row">
+                        @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+                            @foreach($reserves as $reserve)
+                                <div class="col-md-4 mb-4">
+                                    <div class="thumb-wrapper">
+                                        <span class="wish-icon"><i class="fa fa-heart-o"></i></span>
+                                        <div class="image-boura">
+                                            <img src="{{ asset('public/image/' . $reserve->photo) }}" class="card-img-top img-fluid" alt="...">
+                                        </div>
+                                        <div class="thumb-content">
+                                            <h5 class="card-title">{{ $reserve->libelle }}</h5>
+                                            <h5 class="card-title">Date: {{ $reserve->date_evenement }}</h5>
+                                            <p class="card-text overflow-hidden" style="max-height: 10rem;">Description : {{ $reserve->description }}</p>
+                                            <h5 class="card-title">Lieux: {{ $reserve->lieux }}</h5>
+                                            @foreach ($reserve->reservations as $reservation)
+                                                <p class="card-title">Référence: {{ $reservation->reference }}</p>
+                                            @endforeach
+                                            <h5 class="card-title">Publié Par: {{ $reserve->user_id ? $reserve->user->name : 'Utilisateur inconnu' }}</h5>
+                                            <a href="{{ route('details',['id'=>$reserve->id]) }}" class="btn btn-primary">Voir Détails</a>
+                                            @if($reserve->isCancelable())
+                                                @if(now()->diffInDays($reserve->date_evenement) > 3)
+                                                    <form action="{{ route('cancel_reservation',['id'=>$reserve->id]) }}" method="post">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Annuler Réservation</button>
+                                                    </form>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div>
-            </div>
-            </div>
-            </div>
-            </div>
-            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 

@@ -408,6 +408,11 @@ $(document).ready(function(){
         @csrf
         <button type="submit" class="btn btn-danger">Refuser</button>
     </form>
+    <form action="{{ route('supprimer_reservation', ['id' => $reservation->id]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
 </div>
               </td>
                     </td>
