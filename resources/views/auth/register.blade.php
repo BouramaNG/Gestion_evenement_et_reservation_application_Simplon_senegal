@@ -183,7 +183,7 @@ body {
 <div class="container">
 	<div class="screen">
 		<div class="screen__content">
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('register') }}">
                                                 @csrf
                                                 <div class="login__field">
 					<i class="login__icon fas fa-user"></i>

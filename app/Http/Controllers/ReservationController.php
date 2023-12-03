@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ReservationController extends Controller
 {
@@ -36,10 +37,12 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', 'Vous avez déjà réservé pour cet événement.');
         }
 
+        $codeBarre = Str::uuid()->toString();
+
         $reservation = new Reservation();
         $reservation->evenement_id = $request->evenement_id;
         $reservation->user_id = $user->id;
-        $reservation->reference = Str::uuid();
+        $reservation->reference = $codeBarre; 
         $reservation->place_reserver = $request->nombre_places;
         $reservation->status = $request->status;
         $reservation->reservation_date = $request->reservation_date;
@@ -48,7 +51,10 @@ class ReservationController extends Controller
         $evenement = Evenement::find($request->evenement_id);
         $evenement->total_place -= $request->nombre_places;
         $evenement->save();
-    
+        $qrCode = QrCode::size(200)->generate($codeBarre);
+
+    $qrCodePath = public_path('qrcodes/') . $codeBarre . '.png';
+    file_put_contents($qrCodePath, $qrCode);
         return redirect()->back()->with('success', 'Réservation effectuée avec succès.');
     }
     

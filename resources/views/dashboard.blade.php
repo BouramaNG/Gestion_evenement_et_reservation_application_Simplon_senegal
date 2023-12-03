@@ -533,43 +533,65 @@ h2::after {
 <body>
 
 <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
-    <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>Sen<b>ReserV</b></a>  		
+    <a href="{{ route('dashboard') }}" class="navbar-brand"><i class="fa fa-cube"></i>Sen<b>ReserV</b></a>  		
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">		
-        <form class="navbar-form form-inline">
-            <div class="input-group search-box">								
-                <input type="text" id="search" class="form-control" placeholder="Search here...">
-                <span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
-            </div>
-        </form>
-        <div class="navbar-nav ml-auto">
-            <a href="{{route('dashboard')}}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Home</span></a>
+	<form class="navbar-form form-inline" action="{{ route('search') }}" method="get">
+    <div class="input-group search-box">								
+        <input type="text" name="query" id="search" class="form-control" placeholder="Rechercher...">
+        <span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" name="filter_name" id="filter_name">
+        <label class="form-check-label" for="filter_name">Nom</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" name="filter_location" id="filter_location">
+        <label class="form-check-label" for="filter_location">Lieu</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" name="filter_association" id="filter_association">
+        <label class="form-check-label" for="filter_association">Association</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Rechercher</button>
+</form>
 
-            <a href="{{route('historique')}}" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Historique</span></a>		
+        <div class="navbar-nav ml-auto">
+            <a href="{{ route('dashboard') }}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Home</span></a>
+
+            <a href="{{ route('historique') }}" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Historique</span></a>		
             <a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
             <div class="nav-item dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> {{Auth::user()->name}} <b class="caret"></b></a>
-                <div class="dropdown-menu">
-                    
-                    <div class="divider dropdown-divider"></div>
+                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action">
                     @auth
+                        <img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar">
+                        {{ Auth::user()->name }}
+                    @else
+                        <i class="material-icons">&#xE7FD;</i> Connexion
+                    @endauth
+                    <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu">
+                    @auth
+                        <div class="divider dropdown-divider"></div>
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <button type="submit" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Deconnexion</button>
                         </form>
                     @else
-                    <a href="{{ route('login') }}" class="dropdown-item">Connexion</a>
-                        <a href="{{ route('register') }}" class="dropdown-item">Inscription</a>
-                        <a href="{{ route('become.association') }}" class="dropdown-item">Become Association</a>
+                        <a href="{{ route('login') }}" class="dropdown-item"><i class="material-icons">&#xE7FD;</i> Connexion</a>
+                        <a href="{{ route('register') }}" class="dropdown-item"><i class="material-icons">&#xE7FD;</i> Inscription</a>
+                        <a href="{{ url('become_association') }}" class="dropdown-item"><i class="material-icons">&#xE7FD;</i> Become Association</a>
                     @endauth
                 </div>
             </div>
         </div>
     </div>
 </nav>
+
 
 <section>
 <div id="carouselExampleCaptions" class="carousel slide">

@@ -291,21 +291,25 @@
    <div class="titre">
    <h1>Details Evenement</h1>
    </div>
-    <section class="d-flex justify-content-center align-items-center">
+   <section class="d-flex justify-content-center align-items-center">
     <div class="card mb-3">
-  <img src="{{ asset('public/image/' . $event->photo) }}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{$event->libelle}}</h5>
-    <p class="card-text">Description : {{$event->description}}</p>
-    <h5 class="card-title">Location :{{$event->lieux}}</h5>
-    <h5 class="card-title">Status : {{$event->closed}}</h5>
-    <h5 class="card-title">Total Place : {{$event->total_place}} places</h5>
-    <h5 class="card-title">Date Limite : {{$event->date_limite_inscription}}</h5>
-    <h5 class="card-title">Publie par : {{$event->user_id ? $event->user->name : 'Utilisateur inconnu'}}</h5>
-<a href="{{ route('reservation_event', ['evenement_id' => $event->id]) }}" class="btn btn-danger">Reservation</a>
-  </div>
-</div>
+        <img src="{{ asset('public/image/' . $event->photo) }}" class="card-img-top" alt="...">
+      
 
-    </section>
+        <!-- Ajoutez cette ligne pour afficher le code QR -->
+        <img src="{{ asset($event->qr_code_path) }}" alt="QR Code" class="card-img-top">
+
+        <div class="card-body">
+            <h5 class="card-title">{{$event->libelle}}</h5>
+            <p class="card-text">Description : {{$event->description}}</p>
+            <h5 class="card-title">Location :{{$event->lieux}}</h5>
+            <h5 class="card-title">Status : {{$event->closed}}</h5>
+            <h5 class="card-title">Total Place : {{$event->total_place}} places</h5>
+            <h5 class="card-title">Date Limite : {{$event->date_limite_inscription}}</h5>
+            <h5 class="card-title">Publie par : {{$event->user_id ? $event->user->name : 'Utilisateur inconnu'}}</h5>
+            <a href="{{ route('reservation_event', ['evenement_id' => $event->id]) }}" class="btn btn-danger">Reservation</a>
+        </div>
+    </div>
+</section>
 </body>
 </html>

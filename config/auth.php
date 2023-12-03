@@ -63,6 +63,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+            'registered' => [
+                'App\Http\Controllers\Auth\RegisteredUserController',
+                'registered',
+            ],
         ],
     
         'associations' => [

@@ -6,12 +6,15 @@ use App\Models\User;
 use App\Models\Evenement;
 use App\Models\Association;
 use App\Models\Reservation;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
 use App\Mail\ReservationRefusee;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\ReservationRefused;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AssociationController extends Controller
 {
@@ -46,9 +49,11 @@ class AssociationController extends Controller
       
 
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:users', 'regex:/^[a-zA-Z ]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed'],
+            'phone' => ['required', 'regex:/^(77|78)\d{7}$/'], 
+           
         ]);
         $logoPath = $request->file('logo')->store('logos', 'public');
         $user = User::insert([
@@ -65,42 +70,14 @@ class AssociationController extends Controller
             
         ]);
 
-        $notification = array(
-            'message' => 'Salut a vous vous vous etes inscrit avec succee!',
-            'alert-type' => 'success'
-        );
+  
 
        
-        return redirect()->back();
+        return redirect()->back()->with('success','Vous vous etes inscrit avec succe');
 
     }
    
-    
   
- 
-    //     $product_id = Evenement::insertGetId([
-
-          
-    //         'libelle' => $request->libelle,
-    //         'date_evenement' => $request->date_evenement,
-    //         'lieux' => $request->lieux,
-    //         'description' => $request->description,
-
-    //         'closed' => $request->closed,
-    //         'date_limite_inscription' => $request->date_limite_inscription,
-    //         'total_place' => $request->total_place,
-           
-
-    //     ]);
-
-      
-    //     $notification = array(
-    //         'message' => 'Votre produuit a ete inserer avec succee !',
-    //         'alert-type' => 'success'
-    //     );
-
-    //     return redirect()->back();
-    // } 
 
 
     public function addEvent(Request $request)
@@ -125,8 +102,22 @@ class AssociationController extends Controller
     $evenement->closed = $request->closed;
     $evenement->user_id = $user->id;
     $evenement->save();
-
+    $this->generateQRCode($evenement->id);
     return redirect()->back()->with('success', 'L\'insertion a été effectuée avec succès.');
+}
+
+
+public function generateQRCode($eventId)
+{
+
+    $event = Evenement::findOrFail($eventId);
+    $qrCode = QrCode::generate(route('details', ['id' => $event->id, 'libelle' => $event->libelle]));
+
+    $filename = 'qrcodes/events/' . Str::uuid() . '.png';
+    file_put_contents(public_path($filename), $qrCode);
+
+    $event->qr_code_path = $filename;
+    $event->save();
 }
 
  public function ListeEvenement()
@@ -229,13 +220,38 @@ public function refuse($id)
     $reservation = Reservation::find($id);
     $reservation->est_accepted = false;
     $reservation->save();
-    $userEmail = $reservation->client->email; 
+    $userEmail = $reservation->user->email; 
     $subject = 'Réservation refusée';
 
     Mail::to($userEmail)->send(new ReservationRefusee($subject));
 
 
     return redirect()->back()->with('error', 'Réservation refusée.');
+}
+
+
+public function search(Request $request)
+{
+    $query = $request->input('query');
+    $filterName = $request->has('filter_name');
+    $filterLocation = $request->has('filter_location');
+    $filterAssociation = $request->has('filter_association');
+
+    $events = Evenement::query();
+
+    if ($filterName) {
+        $events->where('libelle', 'like', '%' . $query . '%');
+    }
+
+    if ($filterLocation) {
+        $events->where('lieux', 'like', '%' . $query . '%');
+    }
+
+    
+
+    $results = $events->get();
+
+    return view('association.search', compact('results'));
 }
 
 }
