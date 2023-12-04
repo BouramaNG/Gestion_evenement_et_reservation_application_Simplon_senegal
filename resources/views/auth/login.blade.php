@@ -176,11 +176,16 @@ body {
 .social-login__icon:hover {
 	transform: scale(1.5);	
 }
+h1{
+	text-align: center;
+}
         </style>
 
 </head>
 <body>
+<h1 class="connexion">Bienvenue dans votre page Connexion</h1>
 <div class="container">
+	
 	<div class="screen">
 		<div class="screen__content">
         <form method="POST" action="{{ route('login') }}">

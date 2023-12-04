@@ -546,7 +546,7 @@ h2::after {
 <body>
 
 <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
-    <a href="{{ route('dashboard') }}" class="navbar-brand"><i class="fa fa-cube"></i>Sen<b>ReserV</b></a>  		
+    <a href="{{ url('/') }}" class="navbar-brand"><i class="fa fa-cube"></i>Sen<b>ReserV</b></a>  		
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -559,7 +559,7 @@ h2::after {
             </div>
         </form>
         <div class="navbar-nav ml-auto">
-            <a href="{{ route('dashboard') }}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Home</span></a>
+            <a href="{{ url('/') }}" class="nav-item nav-link active"><i class="fa fa-home"></i><span>Home</span></a>
 
             <a href="{{ route('historique') }}" class="nav-item nav-link"><i class="fa fa-envelope"></i><span>Historique</span></a>		
             <a href="#" class="nav-item nav-link"><i class="fa fa-bell"></i><span>Notifications</span></a>
@@ -634,7 +634,7 @@ h2::after {
                                                 <p class="card-title">Référence: {{ $reservation->reference }}</p>
                                             @endforeach
                                             <h5 class="card-title">Publié Par: {{ $reserve->user_id ? $reserve->user->name : 'Utilisateur inconnu' }}</h5>
-                                            <a href="{{ route('details',['id'=>$reserve->id]) }}" class="btn btn-primary">Voir Détails</a>
+                                          
                                             @if($reserve->isCancelable())
                                                 @if(now()->diffInDays($reserve->date_evenement) > 3)
                                                     <form action="{{ route('cancel_reservation',['id'=>$reserve->id]) }}" method="post">

@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Evenement;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\AssociationAuthController;
@@ -37,14 +39,15 @@ Route::get('association_login',[AssociationController::class,'VendorLogin'])->na
 Route::post('/association/add_event', [AssociationController::class, 'addEvent'])->name('association.add_event');
 Route::get('admin/dashboard',[AdminController::class,'AdminDashboard'])->name('admin.dashboard');
 Route::get('association/dashboard',[AssociationController::class,'AssociationDashboard'])->name('association.dashboard');
-Route::get('become_association',[AssociationController::class,'BecomeAssociate'])->name('become.association');
+
 Route::post('/association/register', [AssociationController::class, 'AssociationRegister'])->name('association.register');
 
 
 Route::get('all_reservation',[AssociationController::class,'AllReservation'])->name('all_reservation');
 Route::post('/accepter-reservation/{id}', [AssociationController::class, 'accept'])->name('accepter_reservation');
 Route::post('/refuser-reservation/{id}', [AssociationController::class, 'refuse'])->name('refuser_reservation');
-
+Route::post('/cancel-reservation/{id}', [ReservationController::class,'cancelReservation'])->name('cancel_reservation');
+Route::delete('/supprimer-reservation/{id}', [ReservationController::class,'supprimerReservation'])->name('supprimer_reservation');
 
 Route::get('association_page',[AssociationController::class,'PageAsso'])->name('association_page');
 Route::get('/login/association', [AssociationAuthController::class, 'showLoginForm'])->name('association.login');
@@ -52,16 +55,24 @@ Route::post('/login/association', [AssociationAuthController::class, 'login']);
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 });
+Route::middleware(['auth','role:user'])->group(function(){
+    Route::get('/reservation_event/{evenement_id}', [ReservationController::class, 'showReservationForm'])->name('reservation_event');
+    Route::post('/reservation', [ReservationController::class, 'Reserver'])->name('reservation');
+});
+
 
 Route::get('details/{id}',[AssociationController::class,'Details'])->name('details');
 Route::get('historique',[ReservationController::class,'Historique'])->name('historique');
-Route::post('/cancel-reservation/{id}', [ReservationController::class,'cancelReservation'])->name('cancel_reservation');
-Route::delete('/supprimer-reservation/{id}', [ReservationController::class,'supprimerReservation'])->name('supprimer_reservation');
 
+Route::get('become_association',[AssociationController::class,'BecomeAssociate'])->name('become.association');
 Route::get('/search', [AssociationController::class,'search'])->name('search');
-Route::get('/reservation_event/{evenement_id}', [ReservationController::class, 'showReservationForm'])->name('reservation_event');
-Route::post('/reservation', [ReservationController::class, 'Reserver'])->name('reservation');
+
+// Route::get('/reservation_event/{evenement_id}', [ReservationController::class, 'showReservationForme'])->name('reservation_event');
+
 Route::post('/evenements/{id}/generate-qr-code', [AssociationController::class, 'generateQRCode'])->name('generate_qr_code');
+Route::get('qrcode/{event}', function ($event) {
+    return QrCode::size(300)->generate($event);
+})->name('qrcode');
 
 
 

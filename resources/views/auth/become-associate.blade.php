@@ -59,6 +59,9 @@
             border-radius: 4px;
             cursor: pointer;
         }
+        h1{
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -81,6 +84,7 @@
     </div>
 @endif
 <form action="{{ route('association.register') }}" method="post" enctype="multipart/form-data">
+<h1>Espace Association !</h1>
     @csrf
     <div class="form-group">
         <label for="name">Nom</label>

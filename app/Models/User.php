@@ -53,4 +53,8 @@ class User extends Authenticatable
 {
     return $this->hasMany(Reservation::class, 'user_id');
 }
+public function getRoleAttribute()
+    {
+        return $this->attributes['role'];
+    }
 }

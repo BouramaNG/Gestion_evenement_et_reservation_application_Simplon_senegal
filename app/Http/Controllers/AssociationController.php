@@ -113,19 +113,20 @@ public function generateQRCode($eventId)
     $event = Evenement::findOrFail($eventId);
     $qrCode = QrCode::generate(route('details', ['id' => $event->id, 'libelle' => $event->libelle]));
 
-    $filename = 'qrcodes/events/' . Str::uuid() . '.png';
+    $filename = 'image/' . $event->libelle . '.png';
     file_put_contents(public_path($filename), $qrCode);
 
     $event->qr_code_path = $filename;
     $event->save();
 }
 
- public function ListeEvenement()
- {
-    $user = User::where('role', 'association')->get();
-  $events =  Evenement::all();
-    return view('association.listeevenement',compact('events','user'));
- }
+public function ListeEvenement()
+{
+    $user = Auth::user();
+    $events = Evenement::where('user_id', $user->id)->get();
+
+    return view('association.listeevenement', compact('events'));
+}
 
 
 public function DeleteEvent($id)

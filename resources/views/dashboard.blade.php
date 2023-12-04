@@ -665,6 +665,8 @@ h2::after {
     <h5 class="card-title">Lieux: {{$events->lieux}}</h5>
     <h5 class="card-title">Publie Par: {{ $events->user_id ? $events->user->name : 'Utilisateur inconnu' }}</h5>
   <a href="{{route('details',['id'=>$events->id])}}" class="btn btn-primary">Voir Details</a>
+  <a href="{{ route('qrcode', ['event' => $events->libelle]) }}" class="btn btn-primary" target="_blank">Voir le QR Code</a>
+
 								</div>						
 							</div>
 						</div>
@@ -680,5 +682,7 @@ h2::after {
 
 
 </section>
+
+
 </body>
 </html>

@@ -273,7 +273,7 @@ p {
                     @auth
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
-                            <button type="submit" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</button>
+                            <button type="submit" class="dropdown-item"><i class="material-icons">&#xE8AC;</i>Deconnexion</button>
                         </form>
                     @else
                        
@@ -287,42 +287,54 @@ p {
 
 
 @if(Auth::check())
-<div>
-<div class="error-message">
-    @error('reference')
-        {{ $message }}
-    @enderror
-</div>
-
-</div>
-    <form action="{{ route('reservation') }}" method="POST">
-        @csrf
-        <input type="hidden" name="evenement_id" value="{{ $evenement->id }}">
-
-       
-
-        <div class="form-group">
-            <label for="nombre_places">Nombre de places</label>
-            <input type="number" name="nombre_places" id="nombre_places" class="form-control" required>
+    <!-- Si l'utilisateur est connecté -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="form-group">
-            <label for="nombre_places">Date Reservation</label>
-            <input type="date" name="reservation_date" id="nombre_places" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="status">Statut</label>
-            <select name="status" id="status" class="form-control" required>
-                <option value="en_cours">En cours</option>
-                <option value="ferme">En cours</option>
-            </select>
-        </div>
+    @endif
 
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 
-        <button type="submit" class="btn btn-primary">Réserver</button>
-    </form>
+    <div>
+        <form action="{{ route('reservation') }}" method="POST">
+            @csrf
+			<input type="hidden" name="evenement_id" value="{{ $evenement->id }}">
+
+            <div class="form-group">
+                <label for="nombre_places">Nombre de places</label>
+                <input type="number" name="nombre_places" id="nombre_places" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="nombre_places">Date Reservation</label>
+                <input type="date" name="reservation_date" id="nombre_places" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="status">Statut</label>
+                <select name="status" id="status" class="form-control" required>
+                    <option value="en_cours">En cours</option>
+                    <option value="ferme">Fermé</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Réserver</button>
+        </form>
+    </div>
 @else
+    <!-- Si l'utilisateur n'est pas connecté -->
     <p>Connectez-vous pour effectuer une réservation.</p>
 @endif
+
    
 </body>
 </html>

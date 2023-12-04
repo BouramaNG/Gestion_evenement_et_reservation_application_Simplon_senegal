@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Evenement;
 use App\Models\Reservation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationConfirmation;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ReservationController extends Controller
@@ -24,6 +27,11 @@ class ReservationController extends Controller
     public function Reserver(Request $request)
     {
         $user = Auth::user();
+        $to = $user->email;
+    $subject = 'Confirmation de réservation';
+    $message = "Votre réservation a été confirmée avec succès pour l'événement.";
+
+    Mail::to($to)->send(new ReservationConfirmation($subject, $message));
         $request->validate([
        
             'evenement_id' => 'unique:reservations,evenement_id,NULL,id,user_id,' . Auth::id(),
@@ -55,10 +63,22 @@ class ReservationController extends Controller
 
     $qrCodePath = public_path('qrcodes/') . $codeBarre . '.png';
     file_put_contents($qrCodePath, $qrCode);
-        return redirect()->back()->with('success', 'Réservation effectuée avec succès.');
+        return redirect()->back()->with('success', 'Réservation effectuée avec succès vous receverez un email de confirmation.');
     }
     
-
+    public function showReservationForme($evenement_id)
+    {
+        $evenement = Evenement::findOrFail($evenement_id);
+    
+        $dateLimiteInscription = Carbon::parse($evenement->date_limite_inscription);
+        $aujourdhui = Carbon::now();
+    
+        if ($aujourdhui->gt($dateLimiteInscription)) {
+         
+            return redirect()->route('liste_evenement')->with('error', 'La date limite d\'inscription pour cet événement est dépassée.');
+        }
+        return view('reservation.form', compact('evenement'));
+    }
     public function Historique()
     {
        
@@ -89,13 +109,18 @@ public function supprimerReservation($id)
 {
     $reservation = Reservation::find($id);
 
-    if (!$reservation) {
+    if ($reservation) {
+       
+        if ($reservation->evenement->association_id == Auth::user()->association_id) {
+            $reservation->delete();
+            return redirect()->back();
+        } else {
+            return redirect()->back()->with('error', 'Vous n\'êtes pas autorisé à supprimer cette réservation.');
+        }
+    } else {
         return redirect()->back()->with('error', 'Réservation non trouvée.');
     }
 
-    $reservation->delete();
-
-    return redirect()->back()->with('success', 'Réservation supprimée avec succès.');
 }
 
 }
